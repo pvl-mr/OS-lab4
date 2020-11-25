@@ -1,25 +1,23 @@
 package com.company;
 
-import java.util.ArrayList;
-
 public class File {
 
     private Cluster firstCluster;
 
     private String fileName;
+    private INode indexNode;
 
     public File(String fileName) {
+        indexNode = new INode(fileName);
         this.fileName = fileName;
     }
 
-    public ArrayList<Cluster> getClusters() {
-        ArrayList<Cluster> clusters = new ArrayList<Cluster>();
-        Cluster current = firstCluster;
-        while (current != null) {
-            clusters.add(current);
-            current = current.next;
-        }
-       return clusters;
+    public INode getINode() {
+        return indexNode;
+    }
+
+    public void removeINode() {
+        indexNode = null;
     }
 
     public void setFirstCluster(Cluster firstCluster) {

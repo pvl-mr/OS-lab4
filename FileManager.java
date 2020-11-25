@@ -13,6 +13,8 @@ public class FileManager {
 
     public void allocateClustersForFile(File file, int numOfClusters) {
 
+       Cluster[] clustersForNode = new Cluster[numOfClusters];
+
         if (diskPartition.getFreeClusters().size() < numOfClusters) {
             System.out.println("Недостаточно места для размещения файла на дисковом разделе");
             return;
@@ -20,6 +22,7 @@ public class FileManager {
         ArrayList<Cluster> clusters = diskPartition.getFreeClusters();
         Cluster head = clusters.get(0);
         file.setFirstCluster(clusters.get(0));
+        clustersForNode[0]= clusters.get(0);
         head.setIsUsed(true);
 
         head.next = null;
@@ -30,6 +33,8 @@ public class FileManager {
             }
             last.next = clusters.get(i);
             clusters.get(i).setIsUsed(true);
+            clustersForNode[i] = clusters.get(i);
+            file.getINode().addClusters(clustersForNode);
         }
 
     }
@@ -61,9 +66,7 @@ public class FileManager {
     }
 
     public void deleteFile(File file) {
-        for (int i = 0; i < file.getClusters().size(); i++) {
-            file.getClusters().get(i).setIsUsed(false);
-        }
+       file.removeINode();
     }
 
     public void deleteDirectory(Directory directory) {
